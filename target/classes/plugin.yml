@@ -1,0 +1,8 @@
+name: Checker
+version: '1.0-SNAPSHOT'
+main: org.checker.checker.Checker
+api-version: '1.21'
+commands:
+  contact: {}
+  check: {}
+  uncheck: {}

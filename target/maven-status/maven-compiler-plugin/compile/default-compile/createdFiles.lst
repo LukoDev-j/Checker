@@ -1,0 +1,5 @@
+org\checker\checker\Checker.class
+org\checker\checker\Checker$Contactcommand.class
+org\checker\checker\Checker$Checkcommand.class
+org\checker\checker\Checker$Uncheckcommand.class
+org\checker\checker\Checker$PlayerCheckListener.class
