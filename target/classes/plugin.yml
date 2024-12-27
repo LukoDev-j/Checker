@@ -1,0 +1,16 @@
+name: Mainplugin
+version: '1.0-SNAPSHOT'
+main: ts.mainplugin.Mainplugin
+api-version: '1.21'
+commands:
+  help: {}
+  almaz: {}
+  bm: {}
+  st: {}
+  pv: {}
+  offpv: {}
+  pvban: {}
+  msg: {}
+  contact: {}
+  br: {}
+  meteorit: {}
