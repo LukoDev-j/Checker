@@ -104,31 +104,35 @@ public final class Checker extends JavaPlugin {
             Player player = (Player) sender;
 
             if (args.length < 1) {
-                player.sendMessage("Использование: /pv <ник>");
+                player.sendMessage("Использование: /check <ник>");
                 return false;
             }
 
             String targetPlayerName = args[0];
             Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
-
-            if (targetPlayer != null && targetPlayer.isOnline()) {
-                getLogger().info(ChatColor.RED + "Игрок: " + targetPlayerName + " попал на проверку" );
-                playersUnderCheck.add(targetPlayer);
-                PotionEffect slepota = new PotionEffect(PotionEffectType.BLINDNESS, 100000000, 1);
-                PotionEffect zamedlenie = new PotionEffect(PotionEffectType.SLOWNESS, 100000000, 1);
-                targetPlayer.addPotionEffect(slepota);
-                targetPlayer.addPotionEffect(zamedlenie);
-                targetPlayer.sendTitle(ChatColor.RED + "Проверка на читы", "Следуй инструкциям в чате", 15, 1000000000, 30);
-                player.sendMessage(ChatColor.GREEN + "Игрок " + targetPlayerName + " теперь под проверкой.");
-                for (int i = 0; i < 10; i++) {
-                    targetPlayer.sendMessage(ChatColor.RED + "Заходи в звонок в группе и включай демонстрацию экрана.");
-                    targetPlayer.sendMessage(ChatColor.YELLOW + "Или же используй /contact сообщение");
+            if (!isUnderCheck(targetPlayer)) {
+                if (targetPlayer != null && targetPlayer.isOnline()) {
+                    getLogger().info(ChatColor.RED + "Игрок: " + targetPlayerName + " попал на проверку");
+                    playersUnderCheck.add(targetPlayer);
+                    PotionEffect slepota = new PotionEffect(PotionEffectType.BLINDNESS, 100000000, 1);
+                    PotionEffect zamedlenie = new PotionEffect(PotionEffectType.SLOWNESS, 100000000, 1);
+                    targetPlayer.addPotionEffect(slepota);
+                    targetPlayer.addPotionEffect(zamedlenie);
+                    targetPlayer.sendTitle(ChatColor.RED + "Проверка на читы", "Следуй инструкциям в чате", 15, 1000000000, 30);
+                    player.sendMessage(ChatColor.GREEN + "Игрок " + targetPlayerName + " теперь под проверкой.");
+                    for (int i = 0; i < 10; i++) {
+                        targetPlayer.sendMessage(ChatColor.RED + "Заходи в звонок в группе и включай демонстрацию экрана.");
+                        targetPlayer.sendMessage(ChatColor.YELLOW + "Или же используй /contact сообщение");
+                    }
+                } else {
+                    player.sendMessage("Игрок " + targetPlayerName + " не найден или не в сети.");
                 }
-            } else {
-                player.sendMessage("Игрок " + targetPlayerName + " не найден или не в сети.");
+                return true;
+            }else {
+                player.sendMessage(ChatColor.RED + "игрок уже под проверкой!");
             }
-            return true;
 
+            return false;
         }
     }
 
@@ -139,25 +143,29 @@ public final class Checker extends JavaPlugin {
             Player player = (Player) sender;
 
             if (args.length < 1) {
-                player.sendMessage("Использование: /offpv <ник>");
+                player.sendMessage("Использование: /uncheck <ник>");
                 return false;
             }
 
             String targetPlayerName = args[0];
             Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
-
-            if (targetPlayer != null && targetPlayer.isOnline()) {
-                getLogger().info(ChatColor.GREEN + "Игрок: " + targetPlayerName + "снят с проверки" );
-                playersUnderCheck.remove(targetPlayer);
-                targetPlayer.removePotionEffect(PotionEffectType.SLOWNESS);
-                targetPlayer.removePotionEffect(PotionEffectType.BLINDNESS);
-                targetPlayer.sendTitle(ChatColor.GREEN + "Проверка окончена!", "Удачной игры", 30, 100, 30);
-                player.sendMessage(ChatColor.BOLD + " " + ChatColor.GREEN + "Проверка отключена игроку " + targetPlayerName);
-            } else {
-                player.sendMessage("Игрок " + targetPlayerName + " не найден или не в сети.");
+            if (isUnderCheck(targetPlayer)) {
+                if (targetPlayer != null && targetPlayer.isOnline()) {
+                    getLogger().info(ChatColor.GREEN + "Игрок: " + targetPlayerName + "снят с проверки");
+                    playersUnderCheck.remove(targetPlayer);
+                    targetPlayer.removePotionEffect(PotionEffectType.SLOWNESS);
+                    targetPlayer.removePotionEffect(PotionEffectType.BLINDNESS);
+                    targetPlayer.sendTitle(ChatColor.GREEN + "Проверка окончена!", "Удачной игры", 30, 100, 30);
+                    player.sendMessage(ChatColor.BOLD + " " + ChatColor.GREEN + "Проверка отключена игроку " + targetPlayerName);
+                } else {
+                    player.sendMessage("Игрок " + targetPlayerName + " не найден или не в сети.");
+                }
+                return true;
             }
-            return true;
-
+            else {
+                player.sendMessage(ChatColor.RED + "игрок не под проверкой");
+            }
+            return false;
         }
     }
 }
